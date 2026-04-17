@@ -1,0 +1,105 @@
+﻿using Microsoft.EntityFrameworkCore;
+
+public class TemplateService
+{
+    private readonly AppDbContext _context;
+
+    public TemplateService(AppDbContext context)
+    {
+        _context = context;
+    }
+
+    public async Task<List<WorkoutTemplate>> GetTemplates(int userId)
+    {
+        return await _context.workoutTemplates
+            .Where(t => t.userId == userId)
+            .ToListAsync();
+    }
+
+    public async Task<WorkoutTemplate> AddTemplate(int userId, CreateTemplateDTO dto)
+    {
+        var template = new WorkoutTemplate
+        {
+            Name = dto.Name,
+            userId = userId,
+            templateExercises = dto.Exercises.Select(e => new TemplateExercise
+            {
+                ExerciseId = e.ExerciseId,
+                DefaultWeight = e.DefaultWeight,
+                DefaultSets = e.DefaultSets,
+                DefaultReps = e.DefaultReps
+            }).ToList()
+        };
+
+        _context.workoutTemplates.Add(template);
+        await _context.SaveChangesAsync();
+        return template;
+    }
+
+    public async Task<TemplateExercise?> AddExerciseToTemplate(int userId, int templateId, CreateTemplateExerciseDTO dto)
+    {
+        var template = await _context.workoutTemplates
+            .FirstOrDefaultAsync(t => t.Id == templateId && t.userId == userId);
+
+        if (template == null)
+            return null;
+
+        var exercise = new TemplateExercise
+        {
+            TemplateId = templateId,
+            ExerciseId = dto.ExerciseId,
+            DefaultWeight = dto.DefaultWeight,
+            DefaultSets = dto.DefaultSets,
+            DefaultReps = dto.DefaultReps
+        };
+     
+        _context.templateExercises.Add(exercise);
+        await _context.SaveChangesAsync();
+        return exercise;
+    }
+
+    public async Task<WorkoutTemplate?> UpdateTemplate(int userId, int id, string name)
+    {
+        var template = await _context.workoutTemplates
+            .FirstOrDefaultAsync(t => t.Id == id && t.userId == userId);
+
+        if (template == null)
+            return null;
+
+        template.Name = name;
+        await _context.SaveChangesAsync();
+        return template;
+    }
+
+    public async Task<WorkoutTemplate?> DeleteTemplate(int userId, int id)
+    {
+        var template = await _context.workoutTemplates
+            .FirstOrDefaultAsync(t => t.Id == id && t.userId == userId);
+
+        if (template == null)
+            return null;
+
+        _context.workoutTemplates.Remove(template);
+        await _context.SaveChangesAsync();
+        return template;
+    }
+
+    public async Task<TemplateExercise?> DeleteExerciseFromTemplate(int userId, int id, int exerciseId)
+    {
+        var template = await _context.workoutTemplates
+            .FirstOrDefaultAsync(t => t.Id == id && t.userId == userId);
+
+        if (template == null)
+            return null;
+
+        var exercise = await _context.templateExercises
+            .FirstOrDefaultAsync(e => e.Id == exerciseId && e.TemplateId == id);
+
+        if (exercise == null)
+            return null;
+
+        _context.templateExercises.Remove(exercise);
+        await _context.SaveChangesAsync();
+        return exercise;
+    }
+}
