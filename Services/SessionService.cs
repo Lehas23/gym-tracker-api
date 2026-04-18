@@ -9,7 +9,7 @@ public class SessionService
         _context = context;
     }
 
-    public async Task<List<SessionResponseDTO>> GetSessions(int userId)
+    public async Task<List<SessionResponseDTO>> GetLast10Sessions(int userId)
     {
         var sessions = await _context.workoutSessions
             .Where(s => s.UserId == userId)
@@ -77,5 +77,47 @@ public class SessionService
         _context.workoutSessions.Add(session);
         await _context.SaveChangesAsync();
         return session;
+    }
+
+    public async Task<Set?> UpdateSetDuringSession(int userId, int sessionId, int setId, UpdateSetDTO dto)
+    {
+        var session = await _context.workoutSessions
+            .FirstOrDefaultAsync(s => s.Id == sessionId && s.UserId == userId);
+
+        if (session == null)
+            return null;
+
+        var set = await _context.Sets
+             .FirstOrDefaultAsync(s => s.Id == setId && s.SessionId == sessionId);
+
+        if (set == null)
+            return null;
+
+        set.Reps = dto.Reps;
+        set.Weight = dto.Weight;
+        set.SetNumber = dto.SetNumber;
+        set.ExerciseId = dto.ExerciseId;
+
+        await _context.SaveChangesAsync();
+        return set;
+    }
+
+    public async Task<Set?> DeleteSetDuringSession(int userId, int sessionId, int setId)
+    {
+        var session = await _context.workoutSessions
+            .FirstOrDefaultAsync(s => s.Id == sessionId && s.UserId == userId);
+
+        if (session == null)
+            return null;
+
+        var set = await _context.Sets
+            .FirstOrDefaultAsync(s => s.Id == setId && s.SessionId == sessionId);
+
+        if (set == null)
+            return null;
+
+        _context.Sets.Remove(set);
+        await _context.SaveChangesAsync();
+        return set;
     }
 }

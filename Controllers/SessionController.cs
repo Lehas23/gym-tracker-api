@@ -19,7 +19,7 @@ public class SessionController : ControllerBase
     {
         var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
-        var sessions = await _sessionService.GetSessions(userId);
+        var sessions = await _sessionService.GetLast10Sessions(userId);
 
         return Ok(sessions);
     }
@@ -35,5 +35,31 @@ public class SessionController : ControllerBase
             return NotFound();
 
         return Ok(session);
+    }
+
+    [HttpPut("{sessionId}/sets/{setId}")]
+    public async Task<IActionResult> PutSession(int sessionId, int setId, UpdateSetDTO dto)
+    {
+        var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+        var session = await _sessionService.UpdateSetDuringSession(userId, sessionId, setId, dto);
+
+        if (session == null)
+            return NotFound();
+
+        return Ok(session);
+    }
+
+    [HttpDelete("{sessionId}/sets/{setId}")]
+    public async Task<IActionResult> DeleteSetDuringSession(int sessionId, int setId)
+    {
+        var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+        var session = await _sessionService.DeleteSetDuringSession(userId, sessionId, setId);
+
+        if (session == null)
+            return NotFound();
+
+        return NoContent();
     }
 }
