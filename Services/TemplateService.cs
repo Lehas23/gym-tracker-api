@@ -13,6 +13,8 @@ public class TemplateService
     {
         return await _context.workoutTemplates
             .Where(t => t.userId == userId)
+            .Include(t => t.templateExercises)
+                .ThenInclude(te => te.Exercise)
             .ToListAsync();
     }
 

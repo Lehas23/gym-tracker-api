@@ -14,6 +14,19 @@ public class SessionController : ControllerBase
         _sessionService = sessionService;
     }
 
+    [HttpGet("{sessionId}")]
+    public async Task<IActionResult> GetSessionById(int sessionId)
+    {
+        var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+        var session = await _sessionService.GetSessionById(userId, sessionId);
+
+        if (session == null)
+            return NotFound();
+
+        return Ok(session);
+    }
+
     [HttpGet]
     public async Task<IActionResult> GetLast10Sessions()
     {

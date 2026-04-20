@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
 
 public class SessionService
 {
@@ -9,6 +10,37 @@ public class SessionService
         _context = context;
     }
 
+    public async Task<SessionResponseDTO?> GetSessionById(int userId, int sessionId)
+    {
+        var session = await _context.workoutSessions
+            .Include(s => s.Sets)
+                .ThenInclude(s => s.Exercise)
+            .Include(s => s.Template)
+            .FirstOrDefaultAsync(s => s.UserId == userId && s.Id == sessionId);
+
+        if (session == null)
+            return null;
+
+        return new SessionResponseDTO
+        {
+            Id = session.Id,
+            Date = session.Date,
+            TemplateName = session.Template.Name,
+            Exercises = session.Sets
+                .GroupBy(set => set.Exercise.Name)
+                .Select(group => new ExerciseResponseDTO
+                {
+                    ExerciseName = group.Key,
+                    Sets = group.Select(set => new SetResponseDTO
+                    {
+                        Id = set.Id,
+                        SetNumber = set.SetNumber,
+                        Reps = set.Reps,
+                        Weight = set.Weight
+                    }).ToList()
+                }).ToList()
+        };   
+    }
     public async Task<List<SessionResponseDTO>> GetLast10Sessions(int userId)
     {
         var sessions = await _context.workoutSessions

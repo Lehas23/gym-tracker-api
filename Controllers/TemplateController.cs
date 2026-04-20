@@ -14,7 +14,6 @@ public class TemplateController : ControllerBase
         _templateService = templateService;
     }
 
-    [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> GetTemplates()
     {
