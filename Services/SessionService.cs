@@ -31,6 +31,7 @@ public class SessionService
                 .Select(group => new ExerciseResponseDTO
                 {
                     ExerciseName = group.Key,
+                    ExerciseId = group.First().ExerciseId,
                     Sets = group.Select(set => new SetResponseDTO
                     {
                         Id = set.Id,
@@ -62,6 +63,7 @@ public class SessionService
                 .Select(group => new ExerciseResponseDTO
                 {
                     ExerciseName = group.Key,
+                    ExerciseId = group.First().ExerciseId,
                     Sets = group.Select(set => new SetResponseDTO
                     {
                         Id = set.Id,
@@ -111,6 +113,28 @@ public class SessionService
         return session;
     }
 
+    public async Task<Set?> AddSetDuringSession(int userId, int sessionId, AddSetDTO dto)
+    {
+        var session = await _context.workoutSessions
+            .FirstOrDefaultAsync(s => s.Id == sessionId && s.UserId == userId);
+
+        if (session == null)
+            return null;
+
+        var set = new Set
+        {
+            ExerciseId = dto.ExerciseId,
+            Reps = dto.Reps,
+            Weight = dto.Weight,
+            SetNumber = dto.SetNumber,
+            SessionId = sessionId
+        };
+
+        _context.Add(set);
+        await _context.SaveChangesAsync();
+        return set;
+    }
+
     public async Task<Set?> UpdateSetDuringSession(int userId, int sessionId, int setId, UpdateSetDTO dto)
     {
         var session = await _context.workoutSessions
@@ -128,7 +152,6 @@ public class SessionService
         set.Reps = dto.Reps;
         set.Weight = dto.Weight;
         set.SetNumber = dto.SetNumber;
-        set.ExerciseId = dto.ExerciseId;
 
         await _context.SaveChangesAsync();
         return set;

@@ -23,7 +23,7 @@ public class UserController : ControllerBase
         if (user == null)
             return BadRequest("Email already exists.");
 
-        return Ok(user);
+        return Created($"/{user.Id}", user);
     }
 
     [AllowAnonymous]

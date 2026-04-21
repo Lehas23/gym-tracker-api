@@ -13,6 +13,12 @@ public class AppDbContext : DbContext
             .WithMany()
             .HasForeignKey(ws => ws.TemplateId)
             .OnDelete(DeleteBehavior.NoAction);
+
+        modelBuilder.Entity<TemplateExercise>()
+            .HasOne(te => te.Template)
+            .WithMany(t => t.templateExercises)
+            .HasForeignKey(te => te.TemplateId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 
     public DbSet<User> Users { get; set; }

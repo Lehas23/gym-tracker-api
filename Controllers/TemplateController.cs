@@ -30,7 +30,7 @@ public class TemplateController : ControllerBase
         var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
         var addTemplate = await _templateService.AddTemplate(userId, dto);
-        return Created($"/templates/{addTemplate.Id}", addTemplate);
+        return Created($"/{addTemplate.Id}", addTemplate);
     }
 
     [HttpPost("{id}/exercises")]
@@ -43,7 +43,7 @@ public class TemplateController : ControllerBase
         if (exercise == null)
             return NotFound();
 
-        return Ok(exercise);
+        return Created($"/{exercise.Id}", exercise);
     }
 
     [HttpPut("{id}")]

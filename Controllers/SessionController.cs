@@ -47,7 +47,20 @@ public class SessionController : ControllerBase
         if (session == null)
             return NotFound();
 
-        return Ok(session);
+        return Created($"/{session.Id}", session);
+    }
+
+    [HttpPost("{sessionId}/sets")]
+    public async Task<IActionResult> PostSetDuringSession(int sessionId, AddSetDTO dto)
+    {
+        var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+        var set = await _sessionService.AddSetDuringSession(userId, sessionId, dto);
+
+        if (set == null)
+            return NotFound();
+
+        return Created($"/{set.Id}", set);
     }
 
     [HttpPut("{sessionId}/sets/{setId}")]

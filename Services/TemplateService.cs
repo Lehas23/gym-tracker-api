@@ -81,6 +81,22 @@ public class TemplateService
         if (template == null)
             return null;
 
+        var sessions = _context.workoutSessions
+            .Where(s => s.TemplateId == id);
+
+        foreach (var session in sessions)
+        {
+            session.TemplateId = null;
+        }
+
+        await _context.SaveChangesAsync();
+
+        var templateExercises = _context.templateExercises
+            .Where(te => te.TemplateId == id);
+
+        _context.templateExercises.RemoveRange(templateExercises);
+        await _context.SaveChangesAsync();
+
         _context.workoutTemplates.Remove(template);
         await _context.SaveChangesAsync();
         return template;
