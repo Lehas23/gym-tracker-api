@@ -24,6 +24,19 @@ public class TemplateController : ControllerBase
         return Ok(templates);
     }
 
+    [HttpGet("{templateId}")]
+    public async Task<IActionResult> GetTemplateById(int templateId)
+    {
+        var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+        var template = await _templateService.GetTemplateById(userId, templateId);
+
+        if (template == null)
+            return NotFound();
+
+        return Ok(template);
+    }
+
     [HttpPost]
     public async Task<IActionResult> PostTemplate(CreateTemplateDTO dto)
     {

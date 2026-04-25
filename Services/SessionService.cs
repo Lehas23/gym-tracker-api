@@ -25,7 +25,7 @@ public class SessionService
         {
             Id = session.Id,
             Date = session.Date,
-            TemplateName = session.Template.Name,
+            TemplateName = session.Template?.Name ?? "Unknown Template",
             Exercises = session.Sets
                 .GroupBy(set => set.Exercise.Name)
                 .Select(group => new ExerciseResponseDTO
@@ -57,7 +57,7 @@ public class SessionService
         {
             Id = s.Id,
             Date = s.Date,
-            TemplateName = s.Template.Name,
+            TemplateName = s.Template?.Name ?? "Unknown Template",
             Exercises = s.Sets
                 .GroupBy(set => set.Exercise.Name)
                 .Select(group => new ExerciseResponseDTO

@@ -18,6 +18,15 @@ public class TemplateService
             .ToListAsync();
     }
 
+    public async Task<WorkoutTemplate?> GetTemplateById(int userId, int templateId)
+    {
+        return await _context.workoutTemplates
+            .Where(t => t.userId == userId && t.Id == templateId)
+            .Include(t => t.templateExercises)
+                .ThenInclude(te => te.Exercise)
+            .FirstOrDefaultAsync();
+    }
+
     public async Task<WorkoutTemplate> AddTemplate(int userId, CreateTemplateDTO dto)
     {
         var template = new WorkoutTemplate
