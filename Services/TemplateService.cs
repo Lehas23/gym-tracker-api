@@ -69,15 +69,27 @@ public class TemplateService
         return exercise;
     }
 
-    public async Task<WorkoutTemplate?> UpdateTemplate(int userId, int id, string name)
+    public async Task<WorkoutTemplate?> UpdateTemplate(int userId, int id, UpdateTemplateDTO dto)
     {
         var template = await _context.workoutTemplates
+            .Include(t => t.templateExercises)
             .FirstOrDefaultAsync(t => t.Id == id && t.userId == userId);
 
         if (template == null)
             return null;
 
-        template.Name = name;
+        template.Name = dto.Name;
+
+        _context.templateExercises.RemoveRange(template.templateExercises);
+
+        template.templateExercises = dto.Exercises.Select(e => new TemplateExercise
+        {
+            ExerciseId = e.ExerciseId,
+            DefaultSets = e.DefaultSets,
+            DefaultReps = e.DefaultReps,
+            DefaultWeight = e.DefaultWeight
+        }).ToList();
+
         await _context.SaveChangesAsync();
         return template;
     }

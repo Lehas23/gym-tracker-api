@@ -60,11 +60,11 @@ public class TemplateController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> PutTemplate(int id, [FromBody] string name)
+    public async Task<IActionResult> PutTemplate(int id, UpdateTemplateDTO dto)
     {
         var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
-        var updatedTemplate = await _templateService.UpdateTemplate(userId, id, name);
+        var updatedTemplate = await _templateService.UpdateTemplate(userId, id, dto);
 
         if (updatedTemplate == null)
             return NotFound();
