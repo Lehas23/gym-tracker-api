@@ -106,6 +106,24 @@ public class UserService
         return updatedUser;
     }
 
+    public async Task<bool> UpdatePassword(int userId, string currentPassword, string newPassword)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+
+        if (user == null)
+            return false;
+
+        var hasher = new PasswordHasher<User>();
+        var result = hasher.VerifyHashedPassword(user, user.PasswordHash, currentPassword);
+
+        if (result == PasswordVerificationResult.Failed)
+            return false;
+
+        user.PasswordHash = hasher.HashPassword(user, newPassword);
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
     public async Task<User?> DeleteUser(int userId)
     {
         var deletedUser = await _context.Users

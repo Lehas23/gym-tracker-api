@@ -51,6 +51,19 @@ public class UserController : ControllerBase
         return Ok(updatedUser);
     }
 
+    [HttpPut("me/password")]
+    public async Task<IActionResult> PutPassword(UpdatePasswordDTO dto)
+    {
+        var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+        var result = await _userService.UpdatePassword(userId, dto.CurrentPassword, dto.NewPassword);
+
+        if (!result)
+            return BadRequest("Current password is incorrect.");
+
+        return Ok();
+    }
+
     [HttpDelete("me")]
     public async Task<IActionResult?> DeleteUser()
     {

@@ -49,7 +49,7 @@ public class SessionService
             .Include(s => s.Sets)
                 .ThenInclude(s => s.Exercise)
             .Include(s => s.Template)
-            .OrderByDescending(s => s.Date)
+            .OrderByDescending(s => s.Id)
             .Take(10)
             .ToListAsync();
 
