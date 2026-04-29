@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration.UserSecrets;
 using System.Text.RegularExpressions;
 
 public class SessionService
@@ -73,7 +74,14 @@ public class SessionService
                     }).ToList()
                 }).ToList()
         }).ToList();
-    } 
+    }
+
+    public async Task<int> GetSessionCount(int userId)
+    {
+        return await _context.workoutSessions
+            .Where(u => u.UserId == userId)
+            .CountAsync();
+    }
 
     public async Task<WorkoutSession?> CreateSession(int userId, int templateId)
     {

@@ -37,6 +37,16 @@ public class SessionController : ControllerBase
         return Ok(sessions);
     }
 
+    [HttpGet("count")]
+    public async Task<IActionResult> GetSessionCount()
+    {
+        var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+        var count = await _sessionService.GetSessionCount(userId);
+
+        return Ok(count);
+    }
+
     [HttpPost("{templateId}")]
     public async Task<IActionResult> PostSession(int templateId)
     {
