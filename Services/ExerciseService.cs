@@ -16,7 +16,7 @@ public class ExerciseService
 
         if (!string.IsNullOrWhiteSpace(search))
         {
-            query = query.Where(e => e.Name.Contains(search));
+            query = query.Where(e => e.Name.ToLower().Contains(search.ToLower()));
         }
 
         return await query
