@@ -1,33 +1,27 @@
 \# Gym tracker API
 
+A REST API for tracking gym workouts built with ASP.NET Core. Live API: https://gym-tracker-api-production.up.railway.app/swagger
 
+## Tech stack
 
-A REST API for tracking gym workouts built with ASP.NET Core.
+- ASP.NET Core
+- Entity Framework Core
+- PostgreSQL
+- JWT Authentication
 
+## Features
 
+- User authentication with JWT
+- Create and manage workout templates
+- Log workout sessions
+- Track sets, reps and weight per exercise
 
-\## Tech stack
+## Running the project
 
-* ASP.NET Core
-* Entity Framework Core
-* SQL Server
-* JWT Authentication
-
-
-
-\## Features
-
-* User authentication with JWT
-* Create and manage workout templates
-* Log workout sessions
-* Track sets, reps and weight per exercise
-
-
-
-\## Running the project
-
-* Clone the repo
-* Update connection string in appsettings.json
-* Run 'dotnet ef database update'
-* Run 'dotnet run'
-
+- Clone the repo
+- Set the following environment variables:
+  - `ConnectionStrings__DefaultConnection` — PostgreSQL connection string
+  - `Jwt__Key` — secret key for JWT
+  - `Jwt__Issuer` — JWT issuer
+  - `Jwt__Audience` — JWT audience
+  - `AllowedOrigin` — frontend URL for CORS
