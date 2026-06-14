@@ -7,9 +7,9 @@ using System.Security.Claims;
 [Route("templates")]
 public class TemplateController : ControllerBase
 {
-    private readonly TemplateService _templateService;
+    private readonly ITemplateService _templateService;
 
-    public TemplateController(TemplateService templateService)
+    public TemplateController(ITemplateService templateService)
     {
         _templateService = templateService;
     }

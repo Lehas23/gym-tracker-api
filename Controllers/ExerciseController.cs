@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 [Route("exercises")]
 public class ExerciseController : ControllerBase
 {
-    private readonly ExerciseService _exerciseService;
+    private readonly IExerciseService _exerciseService;
 
-    public ExerciseController(ExerciseService exerciseService)
+    public ExerciseController(IExerciseService exerciseService)
     {
         _exerciseService = exerciseService;
     }

@@ -7,9 +7,9 @@ using System.Security.Claims;
 [Route("sessions")]
 public class SessionController : ControllerBase
 {
-    private readonly SessionService _sessionService;
+    private readonly ISessionService _sessionService;
 
-    public SessionController(SessionService sessionService)
+    public SessionController(ISessionService sessionService)
     {
         _sessionService = sessionService;
     }

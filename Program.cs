@@ -19,10 +19,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddScoped<UserService>();
-builder.Services.AddScoped<TemplateService>();
-builder.Services.AddScoped<SessionService>();
-builder.Services.AddScoped<ExerciseService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ITemplateService, TemplateService>();
+builder.Services.AddScoped<ISessionService, SessionService>();
+builder.Services.AddScoped<IExerciseService, ExerciseService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

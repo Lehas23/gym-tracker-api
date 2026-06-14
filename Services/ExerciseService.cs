@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-public class ExerciseService
+public class ExerciseService : IExerciseService
 {
     private readonly AppDbContext _context;
 

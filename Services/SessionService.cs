@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration.UserSecrets;
 using System.Text.RegularExpressions;
 
-public class SessionService
+public class SessionService : ISessionService
 {
     private readonly AppDbContext _context;
 

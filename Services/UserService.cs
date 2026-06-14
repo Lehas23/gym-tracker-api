@@ -5,7 +5,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-public class UserService
+public class UserService : IUserService
 {
     private readonly AppDbContext _context;
     private readonly IConfiguration _configuration;

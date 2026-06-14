@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-public class TemplateService
+public class TemplateService : ITemplateService
 {
     private readonly AppDbContext _context;
 
